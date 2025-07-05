@@ -1,0 +1,15 @@
+{
+  "name": "devsocials",
+  "version": "1.0.0",
+  "description": "Make connection with other developers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs",
+    "javascript"
+  ],
+  "author": "Vaibhav Bhatt",
+  "license": "ISC"
+}
