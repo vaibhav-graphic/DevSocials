@@ -3,9 +3,8 @@ const connectDb = require("./config/database");
 
 const app = express();
 
-app.use("/", (req, res) => {
-  res.send("check");
-});
+const authRouter = require("./routes/auth");
+
 
 connectDb()
   .then(() => {
