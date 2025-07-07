@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const userSchema = new mongoose.Schema(
   {
@@ -21,11 +22,21 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Invalid email");
+        }
+      },
     },
     password: {
       type: String,
       required: true,
       trim: true,
+      validate(value){
+        if(!validator.isStrongPassword(value)){
+          throw new Error("Weak password");
+        }
+      }
     },
     age: {
       type: Number,
@@ -43,6 +54,11 @@ const userSchema = new mongoose.Schema(
     },
     photoUrl: {
       type: String,
+      validate(value) {
+        if (!validator.isURL(value)) {
+          throw new Error("Invalid Photo URL");
+        }
+      },
       default:
         "https://www.shutterstock.com/image-vector/web-developer-design-vector-illustration-600nw-314602454.jpg",
     },
@@ -50,6 +66,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       minLength: 4,
       maxLength: 100,
+      trim: true,
       default: "This is a default about of the user",
     },
     skills: {

@@ -1,4 +1,6 @@
 const express = require("express");
+const validator = require("validator");
+
 const User = require("../models/user");
 
 const router = express.Router();
@@ -15,6 +17,10 @@ router.post("/signup", async (req, res) => {
       password.trim().length === 0
     ) {
       throw new Error("Input field is empty");
+    }
+
+    if(!validator.isEmail(emailId)){
+        throw new Error("Invalid email Id");
     }
 
     const ALLOWED_DATA = ["firstName", "lastName", "emailId", "password"];
