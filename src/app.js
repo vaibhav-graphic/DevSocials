@@ -5,6 +5,8 @@ const app = express();
 
 const authRouter = require("./routes/auth");
 
+app.use(express.json());
+app.use("/", authRouter);
 
 connectDb()
   .then(() => {
