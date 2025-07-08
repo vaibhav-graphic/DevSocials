@@ -1,4 +1,5 @@
 const validator = require("validator");
+
 const User = require("../models/user");
 
 const validateSignupData = async (data) => {
@@ -48,4 +49,29 @@ const validateSignupData = async (data) => {
   };
 };
 
-module.exports = { validateSignupData };
+const validateLoginData = (data) => {
+  const { emailId, password } = data;
+  const ALLOWED_DATA = ["emailId", "password"];
+
+  const isAllowedData = Object.keys(data).every((k) => {
+    return ALLOWED_DATA.includes(k);
+  });
+
+  if (!isAllowedData) {
+    throw new Error("trying to send extra field");
+  }
+
+  if (!emailId || emailId.trim().length === 0) {
+    throw new Error("Email Id is empty");
+  }
+
+  if (!password || password.trim().length === 0) {
+    throw new Error("password is empty");
+  }
+
+  if (!validator.isEmail(emailId)) {
+    throw new Error("Invalid EmailId");
+  }
+};
+
+module.exports = { validateSignupData, validateLoginData };
