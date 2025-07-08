@@ -4,13 +4,20 @@ const User = require("../models/user");
 const validateSignupData = async (data) => {
   const { firstName, lastName, emailId, password } = data;
 
-  if (
-    !firstName?.trim() === 0 ||
-    !lastName?.trim() === 0 ||
-    !emailId?.trim() === 0 ||
-    !password?.trim() === 0
-  ) {
-    throw new Error("Input field is empty");
+  if (!firstName || firstName.trim().length === 0) {
+    throw new Error("First name is empty");
+  }
+
+  if (!lastName || lastName.trim().length === 0) {
+    throw new Error("Last name is Empty");
+  }
+
+  if (!emailId || emailId.trim().length === 0) {
+    throw new Error("Email id is Empty");
+  }
+
+  if (!password || password.trim().length === 0) {
+    throw new Error("Password is required and cannot be empty");
   }
 
   if (!validator.isEmail(emailId)) {
