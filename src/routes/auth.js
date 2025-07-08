@@ -1,46 +1,18 @@
 const express = require("express");
-const validator = require("validator");
 
 const User = require("../models/user");
+const { validateSignupData } = require("../utils/validate");
 
 const router = express.Router();
 
 router.post("/signup", async (req, res) => {
   const data = req.body;
-  const { firstName, lastName, emailId, password } = data;
 
   try {
-    if (
-      firstName.trim().length === 0 ||
-      lastName.trim().length === 0 ||
-      emailId.trim().length === 0 ||
-      password.trim().length === 0
-    ) {
-      throw new Error("Input field is empty");
-    }
 
-    if(!validator.isEmail(emailId)){
-        throw new Error("Invalid email Id");
-    }
+    const clearData = await validateSignupData(data);
 
-    const ALLOWED_DATA = ["firstName", "lastName", "emailId", "password"];
-
-    const isAllowedData = Object.keys(data).every((k) => {
-      return ALLOWED_DATA.includes(k);
-    });
-
-    if (!isAllowedData) {
-      throw new Error("Trying to add extra field");
-    }
-
-    data.emailId = data.emailId.toLowerCase();
-    const user = new User(data);
-    const existingEmail = await User.findOne({ emailId: data.emailId });
-
-    if (existingEmail) {
-      throw new Error("User with this email already exists");
-    }
-
+    const user = new User(clearData);
     const userData = await user.save();
 
     res.json({ msg: "User signup successfully", data: userData });
