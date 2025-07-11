@@ -1,11 +1,12 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken"); 
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const User = require("../models/user");
 const { validateSignupData, validateLoginData } = require("../utils/validate");
 const { encryptPassword } = require("../utils/encryption");
+const { authMiddleware } = require("../middlewares/auth");
 
 const router = express.Router();
 
@@ -27,7 +28,7 @@ router.post("/signup", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const data = req.body;
-  const {emailId, password} = data;
+  const { emailId, password } = data;
 
   try {
     validateLoginData(data);
@@ -44,9 +45,11 @@ router.post("/login", async (req, res) => {
       throw new Error("Invaild credentials");
     }
 
-    const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET);
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
 
-    res.cookie("token", token);
+    res.cookie("token", token, { expires: new Date(Date.now() + 8 * 3600000) });
     res.json({ msg: "Login successfully" });
   } catch (err) {
     res.status(401).send("Login fail : " + err.message);
