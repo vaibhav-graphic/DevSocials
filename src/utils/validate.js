@@ -74,4 +74,26 @@ const validateLoginData = (data) => {
   }
 };
 
-module.exports = { validateSignupData, validateLoginData };
+const validateEditData = (data) => {
+  const { firstName, lastName, age, gender, photoUrl, about, skills } = data;
+
+  const ALLOWED_DATA = [
+    "firstName",
+    "lastName",
+    "gender",
+    "age",
+    "photoUrl",
+    "about",
+    "skills",
+  ];
+
+  const isAllowedEdit = Object.keys(data).every((field) => {
+    return ALLOWED_DATA.includes(field);
+  });
+
+  if (!isAllowedEdit) {
+    throw new Error("Trying to enter extra field");
+  }
+};
+
+module.exports = { validateSignupData, validateLoginData, validateEditData };
