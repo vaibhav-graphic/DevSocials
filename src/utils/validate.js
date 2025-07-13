@@ -80,8 +80,8 @@ const validateEditData = (data) => {
   const ALLOWED_DATA = [
     "firstName",
     "lastName",
-    "gender",
     "age",
+    "gender",
     "photoUrl",
     "about",
     "skills",
@@ -94,6 +94,47 @@ const validateEditData = (data) => {
   if (!isAllowedEdit) {
     throw new Error("Trying to enter extra field");
   }
+
+  if (!firstName || firstName.trim().length === 0) {
+    throw new Error("FirstName is empty");
+  }
+
+  if (!lastName || lastName.trim().length === 0) {
+    throw new Error("lastName is empty");
+  }
+
+  if (!age || age < 18) {
+    throw new Error("age is empty or under age");
+  }
+
+  if (!photoUrl || !validator.isURL(photoUrl)) {
+    throw new Error("Error in photoUrl");
+  }
+
+  if (!about || about.trim().length === 0) {
+    throw new Error("about in empty or more 100 words");
+  }
+
+  if (skills.length > 10) {
+    throw new Error("No more then 10 skills");
+  }
 };
 
-module.exports = { validateSignupData, validateLoginData, validateEditData };
+const validatePassword = (data) => {
+  const { password } = data;
+
+  if(!password){
+    throw new Error("Password field is empty");
+  }
+
+  if(!validator.isStrongPassword(password)){
+    throw new Error("weak password");
+  }
+};
+
+module.exports = {
+  validateSignupData,
+  validateLoginData,
+  validateEditData,
+  validatePassword,
+};
