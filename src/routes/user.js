@@ -2,6 +2,7 @@ const express = require("express");
 
 const { authMiddleware } = require("../middlewares/auth");
 const ConnectionRequest = require("../models/connectionRequest");
+const User = require("../models/user");
 
 const router = express.Router();
 
@@ -43,6 +44,34 @@ router.get("/user/connections", authMiddleware, async (req, res) => {
     });
 
     res.json({ data: data });
+  } catch (err) {
+    res.status(400).send("Error : " + err.message);
+  }
+});
+
+router.get("/feed", authMiddleware, async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+
+    const connectionRequest = await ConnectionRequest.find({
+      $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }],
+    }).select("fromUserId toUserId");
+
+    const hideUsersFromFeed = new Set();
+
+    connectionRequest.forEach((req) => {
+      hideUsersFromFeed.add(req.fromUserId.toString());
+      hideUsersFromFeed.add(req.toUserId.toString());
+    });
+
+    const users = await User.find({
+      $and: [
+        { _id: { $nin: Array.from(hideUsersFromFeed) } },
+        { _id: { $ne: loggedInUser._id } },
+      ],
+    }).select(SAVE_USER_DATA);
+
+    res.send(users);
   } catch (err) {
     res.status(400).send("Error : " + err.message);
   }
