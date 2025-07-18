@@ -45,7 +45,7 @@ router.post("/login", async (req, res) => {
     const token = user.getJWT();
 
     res.cookie("token", token, { expires: new Date(Date.now() + 8 * 3600000) });
-    res.json({ msg: "Login successfully" });
+    res.json({ msg: "Login successfully", data: user });
   } catch (err) {
     res.status(401).send("Login fail : " + err.message);
   }
