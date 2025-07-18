@@ -1,6 +1,7 @@
 const express = require("express");
 const connectDb = require("./config/database");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
 require("dotenv").config();
 
@@ -13,6 +14,7 @@ const userRouter = require("./routes/user");
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 
 app.use("/", authRouter);
 app.use("/", profileRouter);
