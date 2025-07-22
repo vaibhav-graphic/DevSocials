@@ -6,7 +6,7 @@ const authMiddleware = async (req, res, next) => {
     const { token } = req.cookies;
 
     if (!token) {
-      throw new Error("Authentication required");
+      return res.status(401).send("Please Login");
     }
 
     const decode = jwt.verify(token, process.env.JWT_SECRET);

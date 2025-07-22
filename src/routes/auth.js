@@ -17,6 +17,10 @@ router.post("/signup", async (req, res) => {
     const user = new User(clearData);
     const userData = await user.save();
 
+    const token = user.getJWT();
+
+    res.cookie("token", token, { expires: new Date(Date.now() + 8 * 3600000) });
+
     res.json({ msg: "User signup successfully", data: userData });
   } catch (err) {
     res.status(400).send("Signup failed : " + err.message);
@@ -54,8 +58,8 @@ router.post("/login", async (req, res) => {
 router.post("/logout", (req, res) => {
   res.cookie("token", null, {
     expires: new Date(Date.now()),
-  })
-  res.json({msg: "user logout successfuly"});
+  });
+  res.json({ msg: "user logout successfuly" });
 });
 
 module.exports = router;
