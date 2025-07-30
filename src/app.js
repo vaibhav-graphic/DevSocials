@@ -13,6 +13,7 @@ const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/Profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
+const chatRouter = require("./routes/chat");
 
 app.use(express.json());
 app.use(cookieParser());
@@ -27,6 +28,7 @@ app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
+app.use("/", chatRouter);
 
 const server = http.createServer(app);
 initializeSocket(server);
