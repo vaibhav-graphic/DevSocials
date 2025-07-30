@@ -1,9 +1,11 @@
 const express = require("express");
+const cors = require("cors");
+const http = require("http");
+require("dotenv").config();
+
 const connectDb = require("./config/database");
 const cookieParser = require("cookie-parser");
-const cors = require("cors");
-
-require("dotenv").config();
+const initializeSocket = require("./utils/socket");
 
 const app = express();
 
@@ -26,10 +28,13 @@ app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
 
+const server = http.createServer(app);
+initializeSocket(server);
+
 connectDb()
   .then(() => {
     console.log("Database connected successfully");
-    app.listen(process.env.PORT, () => {
+    server.listen(process.env.PORT, () => {
       console.log("Server started successfully");
     });
   })
